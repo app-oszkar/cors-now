@@ -1,7 +1,7 @@
 'use strict';
 const http = require('http');
 const https = require('https');
-const { parse } = require('url');
+const { parse, format } = require('url');
 const pipe = require('promisepipe');
 const marked = require('marked-promise');
 const access = require('access-control');
@@ -10,12 +10,12 @@ const { readFile } = require('fs-promise');
 const cors = access();
 
 const hopByHopHeaders = new Set([
-    'Connection',
-    'Keep-Alive',
-    'Public',
-    'Proxy-Authenticate',
-    'Transfer-Encoding',
-    'Upgrade'
+    'connection',
+    'keep-alive',
+    'public',
+    'proxy-authenticate',
+    'transfer-encoding',
+    'upgrade'
 ]);
 
 module.exports = async (req, res) => {
@@ -54,19 +54,48 @@ module.exports = async (req, res) => {
         parsed.headers = Object.assign({}, req.headers, {
             host: parsed.hostname
         });
-        const response = await fetch(mod, parsed);
+        const response = await get(mod, parsed);
 
         // proxy response
         res.statusCode = response.statusCode;
         for (const name of Object.keys(response.headers)) {
             if (hopByHopHeaders.has(name)) continue;
-            res.setHeader(name, response.headers[name]);
+
+            let value = res.getHeader(name);
+            if (value) {
+                // Append to existing values, like "Vary" from the CORS module
+                value += `, ${response.headers[name]}`;
+            } else {
+                value = response.headers[name];
+            }
+
+            res.setHeader(name, value);
         }
+
+        // if a 3xx response happened with a redirect, then absolutize
+        // it and re-proxy to this CORS proxy
+        let location = res.getHeader('location');
+        if (location) {
+            const locationParsed = parse(location);
+            if (
+                !('http:' === locationParsed.protocol ||
+                    'https:' === locationParsed.protocol)
+            ) {
+                location = format(
+                    Object.assign({}, parsed, {
+                        path: null,
+                        pathname: location
+                    })
+                );
+            }
+            res.setHeader('location', '/' + location);
+        }
+
         await pipe(response, res);
     }
 };
 
-function fetch(mod, parsed) {
+function get(mod, parsed) {
     return new Promise((resolve, reject) => {
         mod.get(parsed, resolve).once('error', reject);
     });
