@@ -1,6 +1,6 @@
 {
   "name": "cors-now",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "reverse proxy with CORS headers.",
   "license": "MIT",
   "repository": "hemanth/cors-now",
@@ -10,7 +10,7 @@
     "url": "h3manth.com"
   },
   "engines": {
-    "node": "^6.0.0"
+    "node": ">=8.11.3"
   },
   "scripts": {
     "start": "micro index.js"
@@ -27,8 +27,7 @@
     "fs-promise": "^2.0.2",
     "marked-promise": "^2.0.0",
     "micro": "^7.3.2",
-    "promisepipe": "^2.0.0",
-    "snyk": "^1.29.0"
+    "promisepipe": "^2.0.0"
   },
   "devDependencies": {},
   "snyk": false
