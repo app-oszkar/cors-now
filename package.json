@@ -13,9 +13,7 @@
     "node": "^6.0.0"
   },
   "scripts": {
-    "start": "micro index.js",
-    "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "start": "micro index.js"
   },
   "files": [
     "index.js",
@@ -33,5 +31,5 @@
     "snyk": "^1.29.0"
   },
   "devDependencies": {},
-  "snyk": true
+  "snyk": false
 }
