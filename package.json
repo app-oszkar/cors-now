@@ -10,7 +10,7 @@
     "url": "h3manth.com"
   },
   "engines": {
-    "node": "12.x"
+    "node": "10.x"
   },
   "scripts": {
     "start": "micro index.js"
@@ -24,10 +24,10 @@
   ],
   "dependencies": {
     "access-control": "^1.0.0",
-    "fs-promise": "^2.0.2",
+    "fs-promise": "^2.0.3",
     "marked-promise": "^2.0.0",
-    "micro": "^7.3.2",
-    "promisepipe": "^2.0.0"
+    "micro": "^9.3.4",
+    "promisepipe": "^3.0.0"
   },
   "devDependencies": {},
   "snyk": false
