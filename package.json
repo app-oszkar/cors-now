@@ -10,7 +10,7 @@
     "url": "h3manth.com"
   },
   "engines": {
-    "node": "10.x"
+    "node": "16.x"
   },
   "scripts": {
     "start": "micro index.js"
